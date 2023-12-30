@@ -15,6 +15,19 @@ from PIL import Image
 from PIL.ImageQt import ImageQt
 import traceback
 import sys
+import csv
+import io, os
+from os import getcwd
+from os.path import splitext, split, abspath,join, exists
+from json import load as jload
+from json import dump as jdump
+from enum import Enum
+import requests
+
+
+import widgets as wdg
+import auxiliaries as aux
+
 
 if hasattr(QtCore.Qt, 'AA_EnableHighDpiScaling'):
     QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
@@ -83,9 +96,13 @@ class MainWindowUi(QMainWindow):
         self.loadButton.clicked.connect(self.loadList)
         self.cyclesSpinBox.valuedChanged.connect(self.spinboxChange)
         self.inputList.valueChanged.conenct(self.listChanged)
+        self.currList = []
 
+        self.layout = self.findChild(QHBoxLayout, "widgetLayout")
 
        
+
+     
     
         self.show()
       #  self.checkForUpdates(silent = True)
@@ -95,21 +112,21 @@ class MainWindowUi(QMainWindow):
         folder = self.last_open_folder
         if not folder:
             folder = getcwd()
-        filepaths, _ = QFileDialog.getOpenFileNames(
-            self, "Open Object", folder, "All Object Type Files (*.parkobj *.DAT *.json);; Parkobj Files (*.parkobj);; DAT files (*.DAT);; JSON Files (*.json);; All Files (*.*)")
+        filepath, _ = QFileDialog.getOpenFileNames(
+            self, "Open List", folder, "All Text Files (*.CSV *.TXT *.json);; CSV Files (*.CSV);; TXT files (*.TXT);; JSON Files (*.json);; All Files (*.*)")
 
-        if filepaths:
-            for filepath in filepaths:
-                self.loadObjectFromPath(filepath)
+        
         try:
-            o = obj.load(filepath, openpath = self.openpath)
-            name = o.data.get('id', '').split('.',2)[-1]
-            if not name:
-                if o.old_id:
-                    name = o.old_id
-                else:
-                    name = f'Object {self.new_object_count}'
-                    self.new_object_count += 1
+            self.currList = self.readCsv(self, filepath)
+
+           # o = obj.load(filepath, openpath = self.openpath)
+           # name = o.data.get('id', '').split('.',2)[-1]
+          #  if not name:
+           #     if o.old_id:
+          #          name = o.old_id
+           #     else:
+           #         name = f'Object {self.new_object_count}'
+           #         self.new_object_count += 1
         except Exception as e:
             msg = QMessageBox(self)
             msg.setIcon(QMessageBox.Critical)
@@ -118,11 +135,27 @@ class MainWindowUi(QMainWindow):
             msg.setInformativeText(str(traceback.format_exc()))
             msg.show()
             return
+        self.inputList.text = self.currList
+
+    def readCsv(self, filepath):
+        currList = []
+        with open(filepath, newline=',') as csvInput:
+            currReader = csv.reader(csvInput, delimiter=" ", quotechar='|') 
+            for row in currReader:
+                currList.append(row)
+        return currList
     def spinboxChange(self):
         return
     def comparePressed(self):
+        self.compareTab = wdg.comparisonWidget
+        self.layout.addWidget(self.compareTab)
+       
+
+        self.setLayout(self.layout)
         return
     def listChanged(self):
+        text=self.inputList.toPlainText()
+        self.currList = text.split(",")
         return
     
     def checkForUpdates(self, silent = False):

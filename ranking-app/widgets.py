@@ -7,6 +7,8 @@
  * under the GNU General Public License version 3.
  *****************************************************************************
 """
+from ast import MatchAs
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QDialog, QMenu, QGroupBox, QVBoxLayout, QHBoxLayout, QApplication, QWidget, QTabWidget, QToolButton, QComboBox, QScrollArea, QScrollBar, QPushButton, QLineEdit, QLabel, QCheckBox, QSpinBox, QDoubleSpinBox, QListWidget, QFileDialog
 from PyQt5 import uic, QtGui, QtCore
 from PIL import Image, ImageGrab, ImageDraw
@@ -17,7 +19,7 @@ import os.path
 from os import getcwd
 import numpy as np
 from pkgutil import get_data
-
+import random as random
 
 import auxiliaries as aux
 
@@ -1432,10 +1434,6 @@ class SpriteViewWidget(QScrollArea):
             else:
                 self.ratio = self.defaultRatio
 
-
-
-##### Settings window
-
 class ChangeSettingsUi(QDialog):
     def __init__(self, settings):
         super().__init__()
@@ -1545,6 +1543,47 @@ class ChangeSettingsUi(QDialog):
          super().accept()
 
 
+class comparisonWidget(QWidget):
+    def __init__(self, inputList):
+        super().__init__()
+        self.matchList= [[]]
+        self.matches = 0
+        self.inputList = []
+        self.matchOrder=[]
+        for i in self.inputList:
+        
+        
+            curr = random.randrange(0, (len(self.inputList)-1), 1)
+            """if curr in self.matchOrder:
+                while curr in self.matchOrder:
+                    curr=random.randrange(0,self.matches,1)"""
+            
+            self.matchOrder.append(self.inputList[curr])
+            self.inputList.remove(curr)
+    
+class resultsWidget(QWidget):
+    def __init__(self, parent: QWidget | None = ..., flags: WindowFlags | WindowType = ...) -> None:
+        super().__init__(parent, flags)
+##### Settings window
+
+
+
+
+"""comparison process
+
+        what it does is it creates a bracket 
+        
+        there will be tiers of a loser bracket 
+        
+        first divide all items by 2 
+        
+        so there will be a dictionary, for every item in the list
+        
+        the definition will be all of the items it was picked over
+        
+        If there is a chain, then there will be a rematch to break the chain of earlier opponents that maybe you forgot your preference
+        
+        or changed your mind as you kept running the matches!"""
 
 
 
