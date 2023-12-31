@@ -72,12 +72,13 @@ class MainWindowUi(QMainWindow):
         uic.loadUi(aux.resource_path('gui/MainWindow.ui'), self)
         self.setWindowIcon(QtGui.QIcon(aux.resource_path("gui/icon.png")))
         self.setWindowTitle(f'Item Ranker - {VERSION}')
-
+       # self.last_open_folder = path+
         self.app_data_path = app_data_path
-        self.loadSettings()
+        self.last_open_folder = app_data_path
+        #self.loadSettings()
         self.bounding_boxes = aux.BoundingBoxes()
         self.symm_axes = aux.SymmetryAxes()
-        self.last_open_folder = self.settings.get('opendefault', None)
+      #  self.last_open_folder = self.settings.get('opendefault', None)
 
         self.setAcceptDrops(True)
 
@@ -94,8 +95,9 @@ class MainWindowUi(QMainWindow):
         
         self.saveButton.clicked.connect(self.saveList)
         self.loadButton.clicked.connect(self.loadList)
-        self.cyclesSpinBox.valuedChanged.connect(self.spinboxChange)
-        self.inputList.valueChanged.conenct(self.listChanged)
+        self.compareButton.clicked.connect(self.comparePressed)
+        self.cyclesSpinBox.valueChanged.connect(self.spinboxChange)
+        self.inputList.textChanged.connect(self.listChanged)
         self.currList = []
 
         self.layout = self.findChild(QHBoxLayout, "widgetLayout")
@@ -147,12 +149,14 @@ class MainWindowUi(QMainWindow):
     def spinboxChange(self):
         return
     def comparePressed(self):
-        self.compareTab = wdg.comparisonWidget
-        self.layout.addWidget(self.compareTab)
-       
-
-        self.setLayout(self.layout)
-        return
+        self.compareTab = wdg.comparisonWidget(self.currList,self)
+       # self.layout.addWidget(self.compareTab)
+      #  self.compareTab.mainWindow = self
+     #   self.compareTab.inputList = self.currList
+        self.layout.addWidget(self.compareTab,"center")
+        #self.setLayout(self.layout)
+        #return
+        self.layout.updateAllViews()
     def listChanged(self):
         text=self.inputList.toPlainText()
         self.currList = text.split(",")
@@ -211,16 +215,16 @@ class MainWindowUi(QMainWindow):
             jdump(obj=self.settings, fp=file, indent=2)
 
 
-        dialog = wdg.ChangeSettingsUi(self.settings)
+        #/dialog = wdg.ChangeSettingsUi(self.settings)
 
-        if dialog.exec():
-            self.settings = dialog.ret
+       # if dialog.exec():
+        #self.settings = dialog.ret
 
-            self.openpath = self.settings['openpath']
-            self.setCurrentImportColor(self.settings['transparency_color'])
-            self.setCurrentPalette(self.settings['palette'], update_widgets = update_widgets)
+        self.openpath = self.settings['openpath']
+        #self.setCurrentImportColor(self.settings['transparency_color'])
+       # self.setCurrentPalette(self.settings['palette'], update_widgets = update_widgets)
 
-            self.saveSettings()
+       # self.saveSettings()
 
         try:
             o = obj.load(filepath, openpath = self.openpath)
@@ -371,7 +375,43 @@ class MainWindowUi(QMainWindow):
 
             widget.colorRemove(selected_colors)
 
-   
+    def loadSettings(self):
+        try:
+            path = self.app_data_path
+            self.settings = jload(fp=open(f'{path}/config.json'))
+        except FileNotFoundError:
+            self.settings = {}
+            self.changeSettings(update_widgets = False)
+
+            #If user refused to enter settings, use hard coded settings
+            if not self.settings:
+                self.settings['openpath'] = "%USERPROFILE%/Documents/"
+                self.settings['savedefault'] = ''
+                self.settings['opendefault'] =  "%USERPROFILE%/Documents/"
+                
+               
+                self.settings['version'] = '1.0'
+          
+       
+
+        self.openpath = self.settings['openpath']
+        self.last_open_folder = self.settings.get('opendefault', None)
+        
+    def changeSettings(self, update_widgets = True):
+       # dialog = wdg.ChangeSettingsUi(self.settings)
+
+       # if dialog.exec():
+           # self.settings = dialog.ret
+
+        self.openpath = self.settings['openpath']
+           # self.setCurrentImportColor(self.settings['transparency_color'])
+           # self.setCurrentPalette(self.settings['palette'], update_widgets = update_widgets)
+
+        self.saveSettings()    
+    def saveSettings(self):
+        path = self.app_data_path
+        with open(f'{path}/config.json', mode='w') as file:
+            jdump(obj=self.settings, fp=file, indent=2)
 
     def keyPressEvent(self, e):
         if e.key() == QtCore.Qt.Key_Alt:
@@ -454,7 +494,7 @@ def main():
 
     main = MainWindowUi(app_data_path= app_data_path, opening_objects= sys.argv[1:],)
     main.show()
-    main.activateWindow()
+    main.activateWindow()   
 
     app.exec_()
 

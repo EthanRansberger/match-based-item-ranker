@@ -1544,12 +1544,16 @@ class ChangeSettingsUi(QDialog):
 
 
 class comparisonWidget(QWidget):
-    def __init__(self, inputList):
+    def __init__(self, inputList, mainWindow):
         super().__init__()
+        uic.loadUi(aux.resource_path('gui/itemComparisonWindow.ui'), self)
         self.matchList= [[]]
         self.matches = 0
         self.inputList = []
         self.matchOrder=[]
+        self.itemone=0
+        self.itemtwo=0
+        self.mainWindow = mainWindow
         for i in self.inputList:
         
         
@@ -1560,11 +1564,45 @@ class comparisonWidget(QWidget):
             
             self.matchOrder.append(self.inputList[curr])
             self.inputList.remove(curr)
-    
+    def compareItems(self):
+     """   if itemone=="win":
+            itemtwo.parent==itemone
+            itemone.child==itemtwo
+        if item """
+    def nextRound(self):
+        return
+        #####THE INITIAL ROUNDS NEED TO ENSURE THAT EVERYONE HAS A CHILD BY THE END 
+        ## in the event of odd number of entries, for example, the first winner in the next round will play the only one without a child. 
+        ##actually this isnt even true! it still works without needing to do that because lets say there are 5. 1 beats 2, 3 beats 4. Then 1 plays 3, then 1 will play 4 even if it really should be 1 plays 4 in TOURNAMENT mode
+        ####tournament mode, may be a potential update!  
+
+
+        ##THis should be the only condition you may need to check for, then the logic explained below should work:
+
+        #first find any with the same parent (including null), add to list, then randomly select match
+        #if noone has the same parent, find one with the same child, compare, 
+        #If everyone has a unique parent and a unique child, then there should be a complete chain in order of how you ranked.
+        
+        #for item in list of items, take an item, then..
+        ##for item2 in list of items that doesnt equal item, see if they have the same parent
+        
+        #same as above, add to the same list of new matches the matches of those with the same parents INCLUDING whoever loses the parent vs. parent match when now there are two with the same parent! 
+
+        #return a list of the next sequence of matches!
+
 class resultsWidget(QWidget):
-    def __init__(self, parent: QWidget | None = ..., flags: WindowFlags | WindowType = ...) -> None:
-        super().__init__(parent, flags)
+    def __init__(self):
+        super().__init__()
 ##### Settings window
+
+
+class listItem():
+    def __init__(self,parent,child):
+        self.parent = parent
+        self.child = child
+        ###compare all items with no child or no parent!
+        ##then compare items with same parent or same child!
+
 
 
 

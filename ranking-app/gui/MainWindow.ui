@@ -17,18 +17,18 @@
    <widget class="QTextEdit" name="inputList">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>110</y>
-      <width>104</width>
-      <height>87</height>
+      <x>23</x>
+      <y>26</y>
+      <width>251</width>
+      <height>301</height>
      </rect>
     </property>
    </widget>
    <widget class="QLabel" name="listRulesLabel">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>220</y>
+      <x>40</x>
+      <y>340</y>
       <width>201</width>
       <height>16</height>
      </rect>
@@ -63,8 +63,8 @@
    <widget class="QPushButton" name="compareButton">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>190</y>
+      <x>290</x>
+      <y>130</y>
       <width>93</width>
       <height>28</height>
      </rect>
@@ -76,8 +76,8 @@
    <widget class="QPushButton" name="saveListButton">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>250</y>
+      <x>450</x>
+      <y>160</y>
       <width>93</width>
       <height>28</height>
      </rect>
@@ -89,8 +89,8 @@
    <widget class="QPushButton" name="loadListButton">
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>300</y>
+      <x>570</x>
+      <y>160</y>
       <width>93</width>
       <height>28</height>
      </rect>
@@ -102,8 +102,8 @@
    <widget class="QLabel" name="saveRulesLabel">
     <property name="geometry">
      <rect>
-      <x>430</x>
-      <y>250</y>
+      <x>560</x>
+      <y>140</y>
       <width>201</width>
       <height>16</height>
      </rect>
@@ -111,6 +111,17 @@
     <property name="text">
      <string>Save/open CSV or Text File</string>
     </property>
+   </widget>
+   <widget class="QWidget" name="horizontalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>299</x>
+      <y>209</y>
+      <width>471</width>
+      <height>321</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="widgetLayout"/>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
