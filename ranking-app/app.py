@@ -44,7 +44,7 @@ from json import dump as jdump
 from enum import Enum
 import requests
 
-from customwidgets import ColorSelectWidget, ToolBoxWidget
+
 import customwidgets as cwdg
 import widgets as wdg
 import auxiliaries as aux
@@ -109,6 +109,10 @@ class MainWindowUi(QMainWindow):
         self.show()
       #  self.checkForUpdates(silent = True)
     def saveList(self):
+        folder = self.last_open_folder
+        if not folder:
+            folder = getcwd()
+        filepath, _ = QFileDialog.getOpenFileNames(
         return
     def loadList(self):
         folder = self.last_open_folder
@@ -119,7 +123,7 @@ class MainWindowUi(QMainWindow):
 
         
         try:
-            self.currList = self.readCsv(self, filepath)
+            self.currList = self.readCsv(filepath)
 
            # o = obj.load(filepath, openpath = self.openpath)
            # name = o.data.get('id', '').split('.',2)[-1]
@@ -153,10 +157,10 @@ class MainWindowUi(QMainWindow):
        # self.layout.addWidget(self.compareTab)
       #  self.compareTab.mainWindow = self
      #   self.compareTab.inputList = self.currList
-        self.layout.addWidget(self.compareTab,"center")
+        self.layout.addWidget(self.compareTab)
         #self.setLayout(self.layout)
         #return
-        self.layout.updateAllViews()
+       # self.layout.updateAllViews()
     def listChanged(self):
         text=self.inputList.toPlainText()
         self.currList = text.split(",")
@@ -413,15 +417,7 @@ class MainWindowUi(QMainWindow):
         with open(f'{path}/config.json', mode='w') as file:
             jdump(obj=self.settings, fp=file, indent=2)
 
-    def keyPressEvent(self, e):
-        if e.key() == QtCore.Qt.Key_Alt:
-            self.toolbox.selectTool(cwdg.Tools.EYEDROPPER)
-
-
-
-    def keyReleaseEvent(self, e):
-        if e.key() == QtCore.Qt.Key_Alt:
-            self.toolbox.restoreTool()
+   
 
     def dragEnterEvent(self, e):
         if e.mimeData().hasUrls:
