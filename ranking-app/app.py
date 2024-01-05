@@ -112,7 +112,7 @@ class MainWindowUi(QMainWindow):
         folder = self.last_open_folder
         if not folder:
             folder = getcwd()
-        filepath, _ = QFileDialog.getOpenFileNames(
+        #filepath, _ = QFileDialog.getOpenFileNames(
         return
     def loadList(self):
         folder = self.last_open_folder
