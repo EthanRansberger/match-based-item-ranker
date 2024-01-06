@@ -40,30 +40,67 @@ class comparisonWidget(QWidget):
         self.matchList= [[]]
         self.matches = 0
         #self.inputList = []
-        self.inputList = ','.split(inputList[0][0])
-        print(self.inputList)
+        #print(inputList)
+       # self.inputList = ','.split(inputList[0][0])
+       # print(self.inputList)
+        #self.inputList = inputList
+        self.tempList = inputList 
+        self.inputList = []
+
+        for i in self.tempList:
+            g = listItem(self,i)
+            self.inputList.append(g)
         self.matchOrder=[]
         self.itemone=0
         self.itemtwo=0
         self.sameParent = []
         self.sameChild = []
         self.mainWindow = mainWindow
-       # for i in self.inputList:
+
+        self.itemOneButton = self.findChild(QPushButton,"itemOneButton")
+        self.itemTwoButton = self.findChild(QPushButton,"itemOneButton")
+
+        self.itemOneButton.clicked.connect(self.itemOnePressed())
+        self.itemTwoButton.clicked.connect(self.itemTwoPressed())
+
+
+        for i in self.inputList:
         
         
-        #   curr = random.randrange(0, (len(self.inputList)-1), 1)
-        """if curr in self.matchOrder:
-        while curr in self.matchOrder:
-        curr=random.randrange(0,self.matches,1)"""
+           curr = random.randrange(0, (len(self.inputList)-1), 1)
+        self.mainLoop()
     
         # self.matchOrder.append(self.inputList[curr])
         # self.inputList.remove(curr)
-    def compareItems(self):
+    def itemOnePressed(self):
+        self.itema.child = self.itemb
+        self.itemb.parent = self.itema
+        if self.tier == "parent":
+            self.sameParent.pop()
+        else:
+            self.sameChild.pop()
+        #self.nextRound()
+            
+    def itemTwoPressed(self):
+        self.itemb.child = self.itema
+        self.itema.parent = self.itemb
+        if self.tier == "parent":
+            self.sameParent.pop()
+            self.runMatches()
+        else:
+            self.sameChild.pop()
+            self.runMatches()
+       # self.nextRound()
+    def compareItems(self,itema,itemb):
+        self.itema = itema
+        self.itemb = itemb
+        self.itemOneButton.setText(itema.string)
+        self.itemTwoButton.setText(itemb.string)
      """   if itemone=="win":
             itemtwo.parent==itemone
             itemone.child==itemtwo
         if item """
-    def nextRound(self):
+    def nextRound(self, winner):
         return
         #####THE INITIAL ROUNDS NEED TO ENSURE THAT EVERYONE HAS A CHILD BY THE END 
         ## in the event of odd number of entries, for example, the first winner in the next round will play the only one without a child. 
@@ -90,12 +127,21 @@ class comparisonWidget(QWidget):
             if len(self.sameChild)==0:
                 self.printResults()
     def runMatches(self):
-        for i in self.sameParent():
-            i[1].match(i[2])
-        self.matchMaking(self.inputList)
-        for i in self.sameChild():
-            i[1].match(i[2])
-        self.matchMaking(self.inputList)     
+        #for i in self.sameParent():
+          #  i[1].match(i[2])
+        if len(self.sameParent)>=1:
+            self.tier = "parent"
+            i = self.sameParent[0]
+            self.compareItems(i[1],i[2])
+            self.matchMaking(self.inputList)
+        else:
+        #for i in self.sameChild():
+         #   i[1].match(i[2])
+            self.tier = "child"
+            i = self.sameChild[0]
+            
+            self.compareItems(i[1],i[2])
+            self.matchMaking(self.inputList)     
 
     def matchMaking(self,currList):
         for item in currList:
@@ -128,9 +174,14 @@ class resultsWidget(QWidget):
 
 
 class listItem():
-    def __init__(self,parent,child):
+    def __init__(self,widget,string,parent,child):
+        self.widget = widget
+        self.string = string
         self.parent = parent
         self.child = child
+    def match(self,opponent):
+        return
+        
         ###compare all items with no child or no parent!
         ##then compare items with same parent or same child!
 
