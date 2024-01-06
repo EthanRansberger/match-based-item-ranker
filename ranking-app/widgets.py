@@ -56,13 +56,20 @@ class comparisonWidget(QWidget):
         self.sameParent = []
         self.sameChild = []
         self.mainWindow = mainWindow
+        print(self.inputList)
+        self.currList = self.inputList
+
+        self.itema = listItem(self,"")
+        self.itemb = listItem(self,"")
+        self.tier = "parent"
+
 
         self.itemOneButton = self.findChild(QPushButton,"itemOneButton")
-        self.itemTwoButton = self.findChild(QPushButton,"itemOneButton")
+        self.itemTwoButton = self.findChild(QPushButton,"itemTwoButton")
 
-        self.itemOneButton.clicked.connect(self.itemOnePressed())
-        self.itemTwoButton.clicked.connect(self.itemTwoPressed())
-
+        self.itemOneButton.clicked.connect(self.itemOnePressed)
+        self.itemTwoButton.clicked.connect(self.itemTwoPressed)
+        
 
         for i in self.inputList:
         
@@ -73,34 +80,44 @@ class comparisonWidget(QWidget):
         # self.matchOrder.append(self.inputList[curr])
         # self.inputList.remove(curr)
     def itemOnePressed(self):
+        print("item 1 pressed")
         self.itema.child = self.itemb
         self.itemb.parent = self.itema
-        if self.tier == "parent":
+        if self.tier == "parent" and len(self.sameParent)>=1:
             self.sameParent.pop()
-        else:
-            self.sameChild.pop()
-        #self.nextRound()
+           # self.runMatches()
             
+           
+        elif len(self.sameChild)>=1:
+            self.sameChild.pop()
+            
+           # self.runMatches()
+        #self.nextRound()
+        self.currList.append(self.currList.pop(self.currList.index(self.itema)))
+        self.currList.append(self.currList.pop(self.currList.index(self.itemb)))
+        self.matchMaking()
     def itemTwoPressed(self):
+        print("item 2 pressed")
         self.itemb.child = self.itema
         self.itema.parent = self.itemb
         if self.tier == "parent":
             self.sameParent.pop()
-            self.runMatches()
+        
         else:
             self.sameChild.pop()
-            self.runMatches()
+        self.currList.append(self.currList.pop(self.currList.index(self.itema)))
+        self.currList.append(self.currList.pop(self.currList.index(self.itemb)))
+        self.matchMaking()
        # self.nextRound()
     def compareItems(self,itema,itemb):
+        print("comparing items")
         self.itema = itema
         self.itemb = itemb
         self.itemOneButton.setText(itema.string)
         self.itemTwoButton.setText(itemb.string)
-     """   if itemone=="win":
-            itemtwo.parent==itemone
-            itemone.child==itemtwo
-        if item """
+ 
     def nextRound(self, winner):
+        print("next round")
         return
         #####THE INITIAL ROUNDS NEED TO ENSURE THAT EVERYONE HAS A CHILD BY THE END 
         ## in the event of odd number of entries, for example, the first winner in the next round will play the only one without a child. 
@@ -122,11 +139,15 @@ class comparisonWidget(QWidget):
         #return a list of the next sequence of matches!
 
     def mainLoop(self):
+        print("starting main loop")
         self.matchMaking(self.inputList)
-        if len(self.sameParent)==0:
-            if len(self.sameChild)==0:
-                self.printResults()
+        if len(self.sameParent)>=1 and len(self.sameChild)>=1:
+            self.runMatches()
+        #if len(self.sameParent)==0:
+        #    if len(self.sameChild)==0:
+        #        self.printResults()
     def runMatches(self):
+        print("running matches")
         #for i in self.sameParent():
           #  i[1].match(i[2])
         if len(self.sameParent)>=1:
@@ -142,8 +163,11 @@ class comparisonWidget(QWidget):
             
             self.compareItems(i[1],i[2])
             self.matchMaking(self.inputList)     
+        #self.compareItems(self.itema,self.itemb)
 
     def matchMaking(self,currList):
+        print("making matches")
+        print(currList)
         for item in currList:
             
             for thing in currList:
@@ -155,6 +179,7 @@ class comparisonWidget(QWidget):
         
     #define match rules function, submitted list will have the lsit of the matches for each you want to randomize the order of the amtches
     def matchRandomizing(self,submittedList):
+        print("randomizing match")
         matchQueue=[]
         for i in submittedList:
             currone = random.randrange(0, (len(submittedList)-1), 1)
@@ -165,6 +190,7 @@ class comparisonWidget(QWidget):
             matchQueue.push(currmatch)
 
     def printResults(self):
+        print("printing results")
         # refer to main window, have main window replace the comparison widget with the result widget!
         return
 class resultsWidget(QWidget):
@@ -174,7 +200,7 @@ class resultsWidget(QWidget):
 
 
 class listItem():
-    def __init__(self,widget,string,parent,child):
+    def __init__(self,widget,string,parent=None,child=None):
         self.widget = widget
         self.string = string
         self.parent = parent
