@@ -36,9 +36,12 @@ class comparisonWidget(QWidget):
     def __init__(self, inputList, mainWindow):
         super().__init__()
         uic.loadUi(aux.resource_path('gui/itemComparisonWindow.ui'), self)
+        print("comparison initiated")
         self.matchList= [[]]
         self.matches = 0
-        self.inputList = []
+        #self.inputList = []
+        self.inputList = ','.split(inputList[0][0])
+        print(self.inputList)
         self.matchOrder=[]
         self.itemone=0
         self.itemtwo=0
