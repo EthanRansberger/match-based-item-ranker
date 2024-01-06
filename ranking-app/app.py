@@ -109,22 +109,28 @@ class MainWindowUi(QMainWindow):
         self.show()
       #  self.checkForUpdates(silent = True)
     def saveList(self):
+        print("save pressed")
         folder = self.last_open_folder
         if not folder:
             folder = getcwd()
-        filepath, _ = QFileDialog.getOpenFileNames(
+        #filepath, _ = QFileDialog.getOpenFileNames(
+        print("saved as _ at _")
         return
     def loadList(self):
+        print("load pressed")
         folder = self.last_open_folder
         if not folder:
             folder = getcwd()
-        filepath, _ = QFileDialog.getOpenFileNames(
-            self, "Open List", folder, "All Text Files (*.CSV *.TXT *.json);; CSV Files (*.CSV);; TXT files (*.TXT);; JSON Files (*.json);; All Files (*.*)")
+        filepath, _ = QFileDialog.getOpenFileName(
+            self, "Open Folder", folder, "All Text Files (*.CSV *.TXT *.json);; CSV Files (*.CSV);; TXT files (*.TXT);; JSON Files (*.json);; All Files (*.*)")
 
         
         try:
             self.currList = self.readCsv(filepath)
-
+            print(self.currList)
+            
+            #self.inputList.setPlainText(''.join(','.split(''.join(self.currList))))
+            self.inputList.setPlainText(self.currList[0][0])
            # o = obj.load(filepath, openpath = self.openpath)
            # name = o.data.get('id', '').split('.',2)[-1]
           #  if not name:
@@ -141,11 +147,11 @@ class MainWindowUi(QMainWindow):
             msg.setInformativeText(str(traceback.format_exc()))
             msg.show()
             return
-        self.inputList.text = self.currList
+        
 
     def readCsv(self, filepath):
         currList = []
-        with open(filepath, newline=',') as csvInput:
+        with open(filepath) as csvInput:
             currReader = csv.reader(csvInput, delimiter=" ", quotechar='|') 
             for row in currReader:
                 currList.append(row)
