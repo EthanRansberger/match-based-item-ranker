@@ -48,16 +48,16 @@ class comparisonWidget(QWidget):
         self.sameParent = []
         self.sameChild = []
         self.mainWindow = mainWindow
-        for i in self.inputList:
+       # for i in self.inputList:
         
         
-            curr = random.randrange(0, (len(self.inputList)-1), 1)
-            """if curr in self.matchOrder:
-                while curr in self.matchOrder:
-                    curr=random.randrange(0,self.matches,1)"""
-            
-            self.matchOrder.append(self.inputList[curr])
-            self.inputList.remove(curr)
+        #   curr = random.randrange(0, (len(self.inputList)-1), 1)
+        """if curr in self.matchOrder:
+        while curr in self.matchOrder:
+        curr=random.randrange(0,self.matches,1)"""
+    
+        # self.matchOrder.append(self.inputList[curr])
+        # self.inputList.remove(curr)
     def compareItems(self):
      """   if itemone=="win":
             itemtwo.parent==itemone
