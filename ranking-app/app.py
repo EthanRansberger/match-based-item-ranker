@@ -99,8 +99,9 @@ class MainWindowUi(QMainWindow):
         self.compareButton.clicked.connect(self.comparePressed)
         self.cyclesSpinBox.valueChanged.connect(self.spinboxChange)
         self.inputList.textChanged.connect(self.listChanged)
-        self.currList = []
-
+       # self.currList = []
+        print(self.inputList.toPlainText())
+        self.currList = self.inputList.toPlainText().split(',')
         self.layout = self.findChild(QHBoxLayout, "widgetLayout")
 
        
@@ -160,6 +161,9 @@ class MainWindowUi(QMainWindow):
     def spinboxChange(self):
         return
     def comparePressed(self):
+        print("compare pressed")
+        print(self.currList," current list")
+        
         self.compareTab = wdg.comparisonWidget(self.currList,self)
        # self.layout.addWidget(self.compareTab)
       #  self.compareTab.mainWindow = self
