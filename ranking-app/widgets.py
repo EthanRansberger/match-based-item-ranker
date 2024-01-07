@@ -84,17 +84,24 @@ class comparisonWidget(QWidget):
         self.itema.child = self.itemb
         self.itemb.parent = self.itema
         if self.tier == "parent" and len(self.sameParent)>=1:
+            print("parent tier pop")
             self.sameParent.pop()
            # self.runMatches()
             
            
         elif len(self.sameChild)>=1:
+            print("child tier pop")
             self.sameChild.pop()
             
            # self.runMatches()
         #self.nextRound()
+        """
         self.currList.append(self.currList.pop(self.currList.index(self.itema)))
-        self.currList.append(self.currList.pop(self.currList.index(self.itemb)))
+        self.currList.append(self.currList.pop(self.currList.index(self.itemb)))"""
+        self.currList.pop(self.currList.index(self.itemb))
+        self.currList.pop(self.currList.index(self.itema))
+        self.currList.append(self.itema)
+        self.currList.append(self.itemb)
         self.matchMaking(self.currList)
     def itemTwoPressed(self):
         print("item 2 pressed")
@@ -153,6 +160,8 @@ class comparisonWidget(QWidget):
         #for i in self.sameParent():
           #  i[1].match(i[2])
         if len(self.sameParent)>=1:
+            print("same parent match")
+            print(self.sameParent)
             #print(self.sameParent)
             self.tier = "parent"
             i = self.sameParent[0]
@@ -161,6 +170,8 @@ class comparisonWidget(QWidget):
         elif len(self.sameChild)>=1:
         #for i in self.sameChild():
          #   i[1].match(i[2])
+            print("same child match")
+            print(self.sameChild)
             self.tier = "child"
             i = self.sameChild[0]
             
@@ -190,6 +201,10 @@ class comparisonWidget(QWidget):
                             self.sameParent.append([item,thing])
                         elif thing.child==item.child:
                             self.sameChild.append([item,thing])
+            print("same parent")
+            print(self.sameParent)
+            print("same child")
+            print(self.sameChild)
             if len(self.sameParent)==0 and len(self.sameChild)==0:
                 self.printResults
             else:
