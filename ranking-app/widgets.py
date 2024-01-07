@@ -37,33 +37,89 @@ class comparisonWidget(QWidget):
         super().__init__()
         uic.loadUi(aux.resource_path('gui/itemComparisonWindow.ui'), self)
         print("comparison initiated")
-        self.matchList= [[]]
+       #self.matchList= [[]]
         self.matches = 0
         #self.inputList = []
-        self.inputList = ','.split(inputList[0][0])
-        print(self.inputList)
+        #print(inputList)
+       # self.inputList = ','.split(inputList[0][0])
+       # print(self.inputList)
+        #self.inputList = inputList
+        self.tempList = inputList 
+        self.inputList = []
+        print(self.tempList)
+        for i in self.tempList:
+            g = listItem(self,i)
+            self.inputList.append(g)
         self.matchOrder=[]
         self.itemone=0
         self.itemtwo=0
         self.sameParent = []
         self.sameChild = []
         self.mainWindow = mainWindow
-       # for i in self.inputList:
+        print(self.inputList)
+        self.currList = self.inputList
+
+        self.itema = listItem(self,"")
+        self.itemb = listItem(self,"")
+        self.tier = "parent"
+
+
+        self.itemOneButton = self.findChild(QPushButton,"itemOneButton")
+        self.itemTwoButton = self.findChild(QPushButton,"itemTwoButton")
+
+        self.itemOneButton.clicked.connect(self.itemOnePressed)
+        self.itemTwoButton.clicked.connect(self.itemTwoPressed)
         
+
+      #  for i in self.inputList:
         
-        #   curr = random.randrange(0, (len(self.inputList)-1), 1)
-        """if curr in self.matchOrder:
-        while curr in self.matchOrder:
-        curr=random.randrange(0,self.matches,1)"""
+        #
+         #  curr = random.randrange(0, (len(self.inputList)-1), 1)
+        self.mainLoop()
     
         # self.matchOrder.append(self.inputList[curr])
         # self.inputList.remove(curr)
-    def compareItems(self):
-     """   if itemone=="win":
-            itemtwo.parent==itemone
-            itemone.child==itemtwo
-        if item """
-    def nextRound(self):
+    def itemOnePressed(self):
+        print("item 1 pressed")
+        self.itema.child = self.itemb
+        self.itemb.parent = self.itema
+        if self.tier == "parent" and len(self.sameParent)>=1:
+            self.sameParent.pop()
+           # self.runMatches()
+            
+           
+        elif len(self.sameChild)>=1:
+            self.sameChild.pop()
+            
+           # self.runMatches()
+        #self.nextRound()
+        self.currList.append(self.currList.pop(self.currList.index(self.itema)))
+        self.currList.append(self.currList.pop(self.currList.index(self.itemb)))
+        self.matchMaking(self.currList)
+    def itemTwoPressed(self):
+        print("item 2 pressed")
+        self.itemb.child = self.itema
+        self.itema.parent = self.itemb
+        if self.tier == "parent":
+            self.sameParent.pop()
+        
+        else:
+            self.sameChild.pop()
+        self.currList.append(self.currList.pop(self.currList.index(self.itema)))
+        self.currList.append(self.currList.pop(self.currList.index(self.itemb)))
+        for i in self.currList:
+            print(i.string)
+        self.matchMaking(self.currList)
+       # self.nextRound()
+    def compareItems(self,itema,itemb):
+        print("comparing items")
+        self.itema = itema
+        self.itemb = itemb
+        self.itemOneButton.setText(itema.string)
+        self.itemTwoButton.setText(itemb.string)
+ 
+    def nextRound(self, winner):
+        print("next round")
         return
         #####THE INITIAL ROUNDS NEED TO ENSURE THAT EVERYONE HAS A CHILD BY THE END 
         ## in the event of odd number of entries, for example, the first winner in the next round will play the only one without a child. 
@@ -85,30 +141,64 @@ class comparisonWidget(QWidget):
         #return a list of the next sequence of matches!
 
     def mainLoop(self):
+        print("starting main loop")
         self.matchMaking(self.inputList)
-        if len(self.sameParent)==0:
-            if len(self.sameChild)==0:
-                self.printResults()
+        #if len(self.sameParent)>=1 and len(self.sameChild)>=1:
+           # self.runMatches()
+        #if len(self.sameParent)==0:
+        #    if len(self.sameChild)==0:
+        #        self.printResults()
     def runMatches(self):
-        for i in self.sameParent():
-            i[1].match(i[2])
-        self.matchMaking(self.inputList)
-        for i in self.sameChild():
-            i[1].match(i[2])
-        self.matchMaking(self.inputList)     
+        print("running matches")
+        #for i in self.sameParent():
+          #  i[1].match(i[2])
+        if len(self.sameParent)>=1:
+            #print(self.sameParent)
+            self.tier = "parent"
+            i = self.sameParent[0]
+            self.compareItems(i[0],i[1])
+           # self.matchMaking(self.inputList)
+        elif len(self.sameChild)>=1:
+        #for i in self.sameChild():
+         #   i[1].match(i[2])
+            self.tier = "child"
+            i = self.sameChild[0]
+            
+            self.compareItems(i[0],i[1])
+           # self.matchMaking(self.inputList)     
+        #self.compareItems(self.itema,self.itemb)
+        else:
+            self.matchMaking(self.inputList)
 
     def matchMaking(self,currList):
-        for item in currList:
-            
-            for thing in currList:
-                if thing != item:
-                    if thing.parent==item.parent:
-                        self.sameParent.append([item,thing])
-                    if thing.child==item.child:
-                        self.sameChild.append([item,thing])
-        
+        print("making matches")
+        #print(currList)
+        if len(currList)==0:
+            currList = self.inputList
+            self.currList=currList
+            testingWin = True
+        if len(self.sameParent)==0 and len(self.sameChild)==0:
+            for item in currList:
+            # print(item.string)
+
+                for thing in currList:
+                    #print(thing.string)
+                    if thing != item:
+                    # print(thing.string,thing.parent)
+                    # print(item.string,item.parent)
+                        if thing.parent==item.parent:
+                            self.sameParent.append([item,thing])
+                        elif thing.child==item.child:
+                            self.sameChild.append([item,thing])
+            if len(self.sameParent)==0 and len(self.sameChild)==0:
+                self.printResults
+            else:
+                self.runMatches()
+        else:
+            self.runMatches()
     #define match rules function, submitted list will have the lsit of the matches for each you want to randomize the order of the amtches
     def matchRandomizing(self,submittedList):
+        print("randomizing match")
         matchQueue=[]
         for i in submittedList:
             currone = random.randrange(0, (len(submittedList)-1), 1)
@@ -119,6 +209,7 @@ class comparisonWidget(QWidget):
             matchQueue.push(currmatch)
 
     def printResults(self):
+        print("printing results")
         # refer to main window, have main window replace the comparison widget with the result widget!
         return
 class resultsWidget(QWidget):
@@ -128,9 +219,14 @@ class resultsWidget(QWidget):
 
 
 class listItem():
-    def __init__(self,parent,child):
+    def __init__(self,widget,string,parent=None,child=None):
+        self.widget = widget
+        self.string = string
         self.parent = parent
         self.child = child
+    def match(self,opponent):
+        return
+        
         ###compare all items with no child or no parent!
         ##then compare items with same parent or same child!
 
