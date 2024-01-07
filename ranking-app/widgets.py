@@ -224,12 +224,25 @@ class comparisonWidget(QWidget):
             matchQueue.push(currmatch)
 
     def printResults(self):
+        i=0
+        while self.inputList[i].parent!=None:
+            i+=1
+        top = [self.inputList[i]]
+        
+        while top[0].child!=None:
+            top.push(top[0].child)
+        
+        self.resultWidget = resultsWidget(self.mainWindow,self)
         print("printing results")
+        print("low to high: \n",top)
         # refer to main window, have main window replace the comparison widget with the result widget!
         return
 class resultsWidget(QWidget):
-    def __init__(self):
+    def __init__(self,mainWindow=None,compareWidget=None):
         super().__init__()
+        self.mainWindow = mainWindow
+        self.compareWidget = compareWidget
+        
 ##### Settings window
 
 
