@@ -93,46 +93,32 @@ class comparisonWidget(QWidget):
             print("child tier pop")
             self.sameChild.pop(0)
             
-           # self.runMatches()
-        #self.nextRound()
-        """
-        self.currList.append(self.currList.pop(self.currList.index(self.itema)))
-        self.currList.append(self.currList.pop(self.currList.index(self.itemb)))"""
-      #  self.currList.pop(self.currList.index(self.itemb))
-       # self.currList.pop(self.currList.index(self.itema))
-        for i in self.currList:
-            print('string',i.string,' parent ',i.parent,' child ',i.child)
-       # self.currList.pop(0)
-      #  self.currList.pop(0)
+ 
         
         self.currList.append(self.itema)
         self.currList.append(self.itemb)
-        for i in self.currList:
-            print('curr list string',i.string,' parent ',i.parent,' child ',i.child)
-        for g in self.sameParent:
-            for i in g:
-                print('same parent string',i.string,' parent ',i.parent,' child ',i.child)
-        for g in self.sameChild:
-            for i in g:
-                print('same child: string',i.string,' parent ',i.parent,' child ',i.child)
-        
+      
         self.matchMaking(self.currList)
     def itemTwoPressed(self):
         print("item 2 pressed")
         self.itemb.child = self.itema
         self.itema.parent = self.itemb
-        if self.tier == "parent":
-            self.sameParent.pop()
+        if self.tier == "parent" and len(self.sameParent)>=1:
+            print("parent tier pop")
+            self.sameParent.pop(0)
+           # self.runMatches()
+            
+           
+        elif len(self.sameChild)>=1:
+            print("child tier pop")
+            self.sameChild.pop(0)
+            
+ 
         
-        else:
-            self.sameChild.pop()
-        self.currList.append(self.currList.pop(self.currList.index(self.itema)))
-        self.currList.append(self.currList.pop(self.currList.index(self.itemb)))
-        for i in self.currList:
-            print(i.string)
-        
+        self.currList.append(self.itema)
+        self.currList.append(self.itemb)
+      
         self.matchMaking(self.currList)
-       # self.nextRound()
     def compareItems(self,itema,itemb):
         print("comparing items")
         self.itema = itema
@@ -210,18 +196,18 @@ class comparisonWidget(QWidget):
                             currList.pop(self.currList.index(item))
                             currList.pop(self.currList.index(thing))
             if len(self.sameParent)==0 and len(self.sameChild)==0:
-                self.printResults
+                print("printing results")
+                self.printResults()
             else:
+                print("new match running")
                 self.runMatches()
-                for i in self.currList:
-                    print("new match-making")
-                    print(i.string)
+               
+                
+                   
         else:
             self.runMatches()
             print("already list, match making curr")
-            for i in self.currList:
-            
-                print(i.string)
+           
     #define match rules function, submitted list will have the lsit of the matches for each you want to randomize the order of the amtches
     def matchRandomizing(self,submittedList):
         print("randomizing match")
@@ -236,18 +222,26 @@ class comparisonWidget(QWidget):
 
     def printResults(self):
         i=0
+        print(self.inputList)
+        for g in self.inputList:
+            print(g.string)
         while self.inputList[i].parent!=None:
+            print(self.inputList[i].string)
             i+=1
         top = [self.inputList[i]]
         
         while top[0].child!=None:
-            top.push(top[0].child)
+            print(top[0].string)
+            top.insert(0,top[0].child)
         
-        self.resultWidget = resultsWidget(self.mainWindow,self)
+       # self.resultWidget = resultsWidget(self.mainWindow,self)
+        self.mainWindow.initiateResults()
         print("printing results")
-        print("low to high: \n",top)
+        print("low to high: \n")
+        for m in top:
+            print(m.string)
         # refer to main window, have main window replace the comparison widget with the result widget!
-        return
+        #return
 class resultsWidget(QWidget):
     def __init__(self,mainWindow=None,compareWidget=None):
         super().__init__()
