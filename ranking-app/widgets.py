@@ -85,13 +85,13 @@ class comparisonWidget(QWidget):
         self.itemb.parent = self.itema
         if self.tier == "parent" and len(self.sameParent)>=1:
             print("parent tier pop")
-            self.sameParent.pop()
+            self.sameParent.pop(0)
            # self.runMatches()
             
            
         elif len(self.sameChild)>=1:
             print("child tier pop")
-            self.sameChild.pop()
+            self.sameChild.pop(0)
             
            # self.runMatches()
         #self.nextRound()
@@ -102,13 +102,19 @@ class comparisonWidget(QWidget):
        # self.currList.pop(self.currList.index(self.itema))
         for i in self.currList:
             print('string',i.string,' parent ',i.parent,' child ',i.child)
-        self.currList.pop()
-        self.currList.pop()
+       # self.currList.pop(0)
+      #  self.currList.pop(0)
         
         self.currList.append(self.itema)
         self.currList.append(self.itemb)
         for i in self.currList:
-            print('string',i.string,' parent ',i.parent,' child ',i.child)
+            print('curr list string',i.string,' parent ',i.parent,' child ',i.child)
+        for g in self.sameParent:
+            for i in g:
+                print('same parent string',i.string,' parent ',i.parent,' child ',i.child)
+        for g in self.sameChild:
+            for i in g:
+                print('same child: string',i.string,' parent ',i.parent,' child ',i.child)
         
         self.matchMaking(self.currList)
     def itemTwoPressed(self):
@@ -124,6 +130,7 @@ class comparisonWidget(QWidget):
         self.currList.append(self.currList.pop(self.currList.index(self.itemb)))
         for i in self.currList:
             print(i.string)
+        
         self.matchMaking(self.currList)
        # self.nextRound()
     def compareItems(self,itema,itemb):
@@ -196,14 +203,25 @@ class comparisonWidget(QWidget):
                     if thing != item:
                         if thing.parent==item.parent:
                             self.sameParent.append([item,thing])
+                            currList.pop(self.currList.index(item))
+                            currList.pop(self.currList.index(thing))
                         elif thing.child==item.child:
                             self.sameChild.append([item,thing])
+                            currList.pop(self.currList.index(item))
+                            currList.pop(self.currList.index(thing))
             if len(self.sameParent)==0 and len(self.sameChild)==0:
                 self.printResults
             else:
                 self.runMatches()
+                for i in self.currList:
+                    print("new match-making")
+                    print(i.string)
         else:
             self.runMatches()
+            print("already list, match making curr")
+            for i in self.currList:
+            
+                print(i.string)
     #define match rules function, submitted list will have the lsit of the matches for each you want to randomize the order of the amtches
     def matchRandomizing(self,submittedList):
         print("randomizing match")
