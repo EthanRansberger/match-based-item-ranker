@@ -160,6 +160,12 @@ class MainWindowUi(QMainWindow):
         return currList
     def spinboxChange(self):
         return
+    
+    def initiateResults(self):
+        self.resultsTab = wdg.resultsWidget(self,self.compareTab)
+        
+        self.layout.removeWidget(self.compareTab)
+        self.layout.addWidget(self.resultsTab)
     def comparePressed(self):
         print("compare pressed")
         print(self.currList," current list")
