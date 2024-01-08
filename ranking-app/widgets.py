@@ -46,7 +46,7 @@ class comparisonWidget(QWidget):
         #self.inputList = inputList
         self.tempList = inputList 
         self.inputList = []
-        print(self.tempList)
+        #print(self.tempList)
         for i in self.tempList:
             g = listItem(self,i)
             self.inputList.append(g)
@@ -56,7 +56,7 @@ class comparisonWidget(QWidget):
         self.sameParent = []
         self.sameChild = []
         self.mainWindow = mainWindow
-        print(self.inputList)
+        #print(self.inputList)
         self.currList = self.inputList
 
         self.itema = listItem(self,"")
@@ -98,10 +98,18 @@ class comparisonWidget(QWidget):
         """
         self.currList.append(self.currList.pop(self.currList.index(self.itema)))
         self.currList.append(self.currList.pop(self.currList.index(self.itemb)))"""
-        self.currList.pop(self.currList.index(self.itemb))
-        self.currList.pop(self.currList.index(self.itema))
+      #  self.currList.pop(self.currList.index(self.itemb))
+       # self.currList.pop(self.currList.index(self.itema))
+        for i in self.currList:
+            print('string',i.string,' parent ',i.parent,' child ',i.child)
+        self.currList.pop()
+        self.currList.pop()
+        
         self.currList.append(self.itema)
         self.currList.append(self.itemb)
+        for i in self.currList:
+            print('string',i.string,' parent ',i.parent,' child ',i.child)
+        
         self.matchMaking(self.currList)
     def itemTwoPressed(self):
         print("item 2 pressed")
@@ -150,26 +158,18 @@ class comparisonWidget(QWidget):
     def mainLoop(self):
         print("starting main loop")
         self.matchMaking(self.inputList)
-        #if len(self.sameParent)>=1 and len(self.sameChild)>=1:
-           # self.runMatches()
-        #if len(self.sameParent)==0:
-        #    if len(self.sameChild)==0:
-        #        self.printResults()
     def runMatches(self):
         print("running matches")
-        #for i in self.sameParent():
-          #  i[1].match(i[2])
+  
         if len(self.sameParent)>=1:
             print("same parent match")
-            print(self.sameParent)
-            #print(self.sameParent)
+            
             self.tier = "parent"
             i = self.sameParent[0]
             self.compareItems(i[0],i[1])
-           # self.matchMaking(self.inputList)
+          
         elif len(self.sameChild)>=1:
-        #for i in self.sameChild():
-         #   i[1].match(i[2])
+
             print("same child match")
             print(self.sameChild)
             self.tier = "child"
@@ -183,28 +183,21 @@ class comparisonWidget(QWidget):
 
     def matchMaking(self,currList):
         print("making matches")
-        #print(currList)
+   
         if len(currList)==0:
             currList = self.inputList
             self.currList=currList
-            testingWin = True
+            #testingWin = True
         if len(self.sameParent)==0 and len(self.sameChild)==0:
             for item in currList:
-            # print(item.string)
+          
 
                 for thing in currList:
-                    #print(thing.string)
                     if thing != item:
-                    # print(thing.string,thing.parent)
-                    # print(item.string,item.parent)
                         if thing.parent==item.parent:
                             self.sameParent.append([item,thing])
                         elif thing.child==item.child:
                             self.sameChild.append([item,thing])
-            print("same parent")
-            print(self.sameParent)
-            print("same child")
-            print(self.sameChild)
             if len(self.sameParent)==0 and len(self.sameChild)==0:
                 self.printResults
             else:
